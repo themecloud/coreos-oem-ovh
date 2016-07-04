@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+ENV=$1
+
+if [ -z "$ENV" ]; then
+    echo usage: $0 /etc/environment
+    exit 1
+fi
+
+# test for rw
+touch $ENV
+if [ $? -ne 0 ]; then
+    echo exiting, unable to modify: $ENV
+    exit 1
+fi
+
+sed -i -e '/^COREOS_PUBLIC_IPV4=/d' \
+    -e '/^COREOS_PRIVATE_IPV4=/d' \
+    "${ENV}"
+
+echo COREOS_PUBLIC_IPV4=$(ip route get 1 | awk '{print $NF;exit}') >> $ENV
+echo COREOS_PRIVATE_IPV4=$(ip route get 172.16 | awk '{print $NF;exit}') >> $ENV

@@ -1,0 +1,4 @@
+*.cpio.gz
+*.vmlinuz
+
+/gof3r

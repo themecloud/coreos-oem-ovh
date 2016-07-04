@@ -1,0 +1,12 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: coreos-setup-environment.service
+      command: "restart"
+      drop-ins:
+        - name: "10-network-online.conf"
+          content: |
+            [Unit]
+            Requires=network-online.target
+            After=network-online.target
